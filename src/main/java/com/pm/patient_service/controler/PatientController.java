@@ -8,6 +8,8 @@ import com.pm.patient_service.dto.PatientRequestDto;
 import com.pm.patient_service.dto.PatientResponseDto;
 import com.pm.patient_service.dto.validators.CreatePatientValidationGroup;
 import com.pm.patient_service.service.PatientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
 import java.util.List;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/patients")
+@Tag(name = "Patient", description = "Api for managing Patients")
 public class PatientController {
 
     private final PatientService patientService;
@@ -37,19 +40,21 @@ public class PatientController {
     }
 
     @GetMapping
+    @Operation(summary = "Get Patients")
     public ResponseEntity<List<PatientResponseDto>> getPatients() {
         List<PatientResponseDto> patients = patientService.getPatients();
         return ResponseEntity.ok().body(patients);
     }
 
     @PostMapping
+    @Operation(summary = "create patient")
     public ResponseEntity<PatientResponseDto> createPatient(@Valid @RequestBody PatientRequestDto patientRequestDto) {
         PatientResponseDto patient = patientService.createPatient(patientRequestDto);
         return ResponseEntity.ok().body(patient);
     }
 
     @PutMapping("/{id}")
-
+    @Operation(summary = "put patient")
     public ResponseEntity<PatientResponseDto> updatePatient(@PathVariable UUID id, @Validated({Default.class, CreatePatientValidationGroup.class}) @RequestBody PatientRequestDto patientRequestDto) {
         PatientResponseDto patientResponseDto = patientService.updatePatient(id, patientRequestDto);
         return ResponseEntity.ok().body(patientResponseDto);
